@@ -9,6 +9,9 @@
     "lint": "eslint",
     "format": "prettier --list-different --write ."
   },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/node": "^20.16.11",
