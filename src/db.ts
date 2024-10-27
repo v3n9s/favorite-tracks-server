@@ -1,6 +1,19 @@
 import knex, { type Knex } from "knex";
 import { config } from "./config.js";
 
+export type UserDb = {
+  id: string;
+  name: string;
+  publicName: string;
+};
+
+export type PasswordDb = {
+  userId: string;
+  password: string;
+};
+
+export type UserWithPasswordDb = UserDb & Pick<PasswordDb, "password">;
+
 export const getUniqueId = (): string => {
   return crypto.randomUUID();
 };
