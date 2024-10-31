@@ -8,13 +8,13 @@ export const usersRouter = Router();
 
 usersRouter.route("/").post(
   createHandler({
-    schema: {
+    schema: z.object({
       body: z.object({
         name: schemas.name,
         publicName: schemas.publicName,
         password: schemas.password,
       }),
-    },
+    }),
     handler: async ({ res, data }) => {
       if (await isUserExists({ name: data.body.name })) {
         res.status(409).end();
