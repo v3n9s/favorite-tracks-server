@@ -1,6 +1,7 @@
 import express, { json } from "express";
 import { config } from "./config.js";
 import { usersRouter } from "./users.controller.js";
+import { sessionsRouter } from "./sessions.controller.js";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use((req, res, next) => {
 app.use(json());
 
 app.use("/users", usersRouter);
+app.use("/sessions", sessionsRouter);
 
 app.use("*", (req, res) => {
   res.status(404).send("{}");
