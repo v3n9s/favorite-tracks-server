@@ -14,6 +14,12 @@ export type PasswordDb = {
 
 export type UserWithPasswordDb = UserDb & Pick<PasswordDb, "password">;
 
+export type SessionDb = {
+  id: string;
+  userId: string;
+  refreshToken: string;
+};
+
 export const getUniqueId = (): string => {
   return crypto.randomUUID();
 };
@@ -43,6 +49,11 @@ const tableCreators = {
   passwords: (t) => {
     t.text("userId").notNullable().primary();
     t.text("password").notNullable();
+  },
+  sessions: (t) => {
+    t.text("id").notNullable().primary();
+    t.text("userId").notNullable();
+    t.text("refreshToken").notNullable();
   },
 } satisfies TableCreators;
 
