@@ -3,14 +3,20 @@ import { config } from "./config.js";
 import { usersRouter } from "./users.controller.js";
 import { sessionsRouter } from "./sessions.controller.js";
 
+const methodsRequiredToUseContentTypeJson = ["POST", "PUT", "PATCH", "DELETE"];
+
 const app = express();
 
 app.use((req, res, next) => {
   res.removeHeader("x-powered-by");
   res.setHeader("content-type", "application/json");
-  if (req.headers["content-type"] !== "application/json") {
+
+  if (
+    methodsRequiredToUseContentTypeJson.includes(req.method) &&
+    req.headers["content-type"] !== "application/json"
+  ) {
     res.status(400).json({
-      error: 'content-type header should be set to "application/json"',
+      error: 'content-type header must be set to "application/json"',
     });
     return;
   }
