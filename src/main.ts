@@ -10,6 +10,13 @@ const app = express();
 
 app.use((req, res, next) => {
   res.removeHeader("x-powered-by");
+  res.setHeader("access-control-allow-origin", "*");
+  if (req.method === "OPTIONS") {
+    res.setHeader("access-control-allow-methods", "*");
+    res.setHeader("access-control-allow-headers", "*");
+    res.status(200).json();
+    return;
+  }
 
   if (
     methodsRequiredToUseContentTypeJson.includes(req.method) &&
