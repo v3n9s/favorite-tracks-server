@@ -6,6 +6,7 @@ import type { UserWithPasswordDb } from "./db.js";
 import { verifyAccessToken } from "./token.js";
 import { getUserWithPassword, isUserExists } from "./users.service.js";
 import { isSessionExists } from "./sessions.service.js";
+import { createErrorBody } from "./create-body.js";
 
 // generic type prevents type inference by accepting function
 export type ExpressRequestHandlerNoInfer = <
@@ -48,10 +49,7 @@ export const createHandler: CreateHandlerFn = ({
           token = authorizationHeader.slice("Bearer ".length);
         } catch (e) {
           if (e instanceof z.ZodError) {
-            res.status(401).json({
-              error:
-                "you need to specify correct token in authorization header",
-            });
+            res.status(401).json(createErrorBody("AuthorizationHeaderFormat"));
             return;
           }
           throw e;
@@ -65,26 +63,22 @@ export const createHandler: CreateHandlerFn = ({
           sessionId = payload.sessionId;
         } catch (e) {
           if (e instanceof jose.errors.JWSSignatureVerificationFailed) {
-            res.status(401).json({ error: "token signature is invalid" });
+            res.status(401).json(createErrorBody("TokenSignatureInvalid"));
             return;
           } else if (e instanceof jose.errors.JWTExpired) {
-            res.status(401).json({ error: "token has expired" });
+            res.status(401).json(createErrorBody("TokenExpired"));
             return;
           }
           throw e;
         }
 
         if (!(await isSessionExists({ id: sessionId }))) {
-          res.status(401).json({
-            error: "session associated with this token doesn't exist",
-          });
+          res.status(401).json(createErrorBody("SessionNotFound"));
           return;
         }
 
         if (!(await isUserExists({ id: userId }))) {
-          res
-            .status(401)
-            .json({ error: "user associated with this token doesn't exist" });
+          res.status(401).json(createErrorBody("SessionUserNotFound"));
           return;
         }
 
@@ -98,13 +92,11 @@ export const createHandler: CreateHandlerFn = ({
         await handler({ req, res, data, user });
       } catch (e) {
         if (e instanceof z.ZodError) {
-          res
-            .status(400)
-            .json({ error: "request data don't match schema requirements" });
+          res.status(400).json(createErrorBody("ValidationError"));
         }
       }
     })().catch(() => {
-      res.status(500).end();
+      res.status(500).json(createErrorBody("InternalError"));
     });
   };
 };

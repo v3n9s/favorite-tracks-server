@@ -12,6 +12,7 @@ import { schemas } from "./schemas.js";
 import { getUserWithPassword, isUserExists } from "./users.service.js";
 import { verifyHash } from "./hash.js";
 import { verifyRefreshToken } from "./token.js";
+import { createErrorBody, createSuccessBody } from "./create-body.js";
 
 export const sessionsRouter = Router();
 
@@ -32,15 +33,22 @@ sessionsRouter
       }),
       handler: async ({ res, data }) => {
         if (!(await isUserExists({ name: data.body.name }))) {
-          res.status(404).send();
+          res.status(404).json(createErrorBody("UserNotFound"));
           return;
         }
         const user = await getUserWithPassword({ name: data.body.name });
         if (!(await verifyHash(user.password, data.body.password))) {
-          res.status(401).send();
+          res.status(401).json(createErrorBody("UserPassword"));
           return;
         }
-        res.status(200).send(await createSession({ userId: user.id }));
+        res
+          .status(200)
+          .json(
+            createSuccessBody(
+              "SessionCreated",
+              await createSession({ userId: user.id }),
+            ),
+          );
       },
     }),
   )
@@ -55,14 +63,22 @@ sessionsRouter
         const {
           payload: { sessionId, userId },
         } = await verifyRefreshToken(data.body.refreshToken);
-        if (
-          !(await isSessionExists({ id: sessionId })) ||
-          !(await isUserExists({ id: userId }))
-        ) {
-          res.status(404).end();
+        if (!(await isSessionExists({ id: sessionId }))) {
+          res.status(404).json(createErrorBody("SessionNotFound"));
           return;
         }
-        res.status(200).send(updateSession({ id: sessionId }));
+        if (!(await isUserExists({ id: userId }))) {
+          res.status(404).json(createErrorBody("SessionUserNotFound"));
+          return;
+        }
+        res
+          .status(200)
+          .send(
+            createSuccessBody(
+              "SessionUpdated",
+              await updateSession({ id: sessionId }),
+            ),
+          );
       },
     }),
   );
@@ -77,15 +93,15 @@ sessionsRouter.route("/:id").delete(
     requireAuthentication: true,
     handler: async ({ res, data, user }) => {
       if (!(await isSessionExists({ id: data.params.id }))) {
-        res.status(404).end();
+        res.status(404).json(createErrorBody("SessionNotFound"));
         return;
       }
       if ((await getSession({ id: data.params.id })).userId !== user.id) {
-        res.status(403).end();
+        res.status(403).json(createErrorBody("SessionUserMismatch"));
         return;
       }
       await deleteSession({ id: data.params.id });
-      res.status(200).end();
+      res.status(200).json(createSuccessBody("SessionDeleted", null));
     },
   }),
 );
