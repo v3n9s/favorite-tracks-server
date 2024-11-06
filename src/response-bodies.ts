@@ -21,6 +21,7 @@ export type ErrorBody = {
 };
 
 export type SuccessCodes = {
+  CORSRequestAllowed: null;
   UserCreated: null;
   SessionCreated: SessionTokens;
   SessionUpdated: SessionTokens;

@@ -2,7 +2,7 @@ import express, { json } from "express";
 import { config } from "./config.js";
 import { usersRouter } from "./users.controller.js";
 import { sessionsRouter } from "./sessions.controller.js";
-import { createErrorBody } from "./create-body.js";
+import { createErrorBody, createSuccessBody } from "./create-body.js";
 
 const methodsRequiredToUseContentTypeJson = ["POST", "PUT", "PATCH", "DELETE"];
 
@@ -14,7 +14,7 @@ app.use((req, res, next) => {
   if (req.method === "OPTIONS") {
     res.setHeader("access-control-allow-methods", "*");
     res.setHeader("access-control-allow-headers", "*");
-    res.status(200).json();
+    res.status(200).json(createSuccessBody("CORSRequestAllowed", null));
     return;
   }
 
