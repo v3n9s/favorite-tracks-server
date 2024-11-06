@@ -6,7 +6,7 @@ import type {
   SuccessCodes,
 } from "./response-bodies.js";
 
-export const createErrorBody = (code: ErrorCode): ErrorBody => {
+export const createErrorBody = <C extends ErrorCode>(code: C): ErrorBody<C> => {
   return {
     success: false,
     code,
@@ -16,7 +16,7 @@ export const createErrorBody = (code: ErrorCode): ErrorBody => {
 export const createSuccessBody = <C extends SuccessCode>(
   code: C,
   payload: SuccessCodes[C],
-): SuccessBody => {
+): SuccessBody<C> => {
   return {
     success: true,
     code,

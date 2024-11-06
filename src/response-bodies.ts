@@ -15,9 +15,9 @@ export type ErrorCode =
   | "ContentTypeApplicationJsonRequired"
   | "NotFound";
 
-export type ErrorBody = {
+export type ErrorBody<C extends ErrorCode = ErrorCode> = {
   success: false;
-  code: ErrorCode;
+  code: C;
 };
 
 export type SuccessCodes = {
@@ -30,8 +30,8 @@ export type SuccessCodes = {
 
 export type SuccessCode = keyof SuccessCodes;
 
-export type SuccessBody = {
+export type SuccessBody<C extends SuccessCode = SuccessCode> = {
   success: true;
-  code: SuccessCode;
-  payload: unknown;
+  code: C;
+  payload: SuccessCodes[C];
 };
