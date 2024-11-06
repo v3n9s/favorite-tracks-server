@@ -2,6 +2,11 @@
   "name": "favorite-tracks-server",
   "version": "0.0.0",
   "type": "module",
+  "exports": {
+    "./response-bodies": {
+      "types": "./src/response-bodies.ts"
+    }
+  },
   "scripts": {
     "clean": "rimraf ./dist",
     "dev": "npm run clean && tsc --project ./tsconfig.dev.json --watch --preserveWatchOutput",
