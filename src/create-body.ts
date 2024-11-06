@@ -1,39 +1,10 @@
-import type { SessionTokens } from "./token.js";
-
-type ErrorCode =
-  | "UserAlreadyExists"
-  | "UserNotFound"
-  | "UserPassword"
-  | "AuthorizationHeaderFormat"
-  | "TokenSignatureInvalid"
-  | "TokenExpired"
-  | "SessionNotFound"
-  | "SessionUserNotFound"
-  | "SessionUserMismatch"
-  | "ValidationError"
-  | "InternalError"
-  | "ContentTypeApplicationJsonRequired"
-  | "NotFound";
-
-type ErrorBody = {
-  success: false;
-  code: ErrorCode;
-};
-
-type SuccessCodes = {
-  UserCreated: null;
-  SessionCreated: SessionTokens;
-  SessionUpdated: SessionTokens;
-  SessionDeleted: null;
-};
-
-type SuccessCode = keyof SuccessCodes;
-
-type SuccessBody = {
-  success: true;
-  code: SuccessCode;
-  payload: unknown;
-};
+import type {
+  ErrorBody,
+  ErrorCode,
+  SuccessBody,
+  SuccessCode,
+  SuccessCodes,
+} from "./response-bodies.js";
 
 export const createErrorBody = (code: ErrorCode): ErrorBody => {
   return {
