@@ -1,17 +1,6 @@
 import * as jose from "jose";
 import { config } from "./config.js";
-
-export type SessionTokens = {
-  accessToken: string;
-  refreshToken: string;
-};
-
-export type TokenPayload = {
-  sessionId: string;
-  userId: string;
-  iat: number;
-  exp: number;
-};
+import type { SessionIds, SessionTokens, TokenPayload } from "./types.js";
 
 const accessTokenKey = new Uint8Array(Buffer.from(config.accessTokenSecret));
 const refreshTokenKey = new Uint8Array(Buffer.from(config.refreshTokenSecret));
@@ -25,9 +14,7 @@ const generateToken = ({
   userId,
   expireInSeconds,
   key,
-}: {
-  sessionId: string;
-  userId: string;
+}: SessionIds & {
   expireInSeconds: number;
   key: Uint8Array;
 }): Promise<string> => {
@@ -45,10 +32,7 @@ const generateToken = ({
 export const createSessionTokens = async ({
   sessionId,
   userId,
-}: {
-  sessionId: string;
-  userId: string;
-}): Promise<SessionTokens> => {
+}: SessionIds): Promise<SessionTokens> => {
   return {
     accessToken: await generateToken({
       sessionId,

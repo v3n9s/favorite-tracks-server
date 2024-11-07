@@ -1,5 +1,6 @@
 import { getDb, getUniqueId, type SessionDb } from "./db.js";
-import { createSessionTokens, type SessionTokens } from "./token.js";
+import { createSessionTokens } from "./token.js";
+import type { SessionTokens } from "./types.js";
 
 export class SessionNotFoundError extends Error {}
 

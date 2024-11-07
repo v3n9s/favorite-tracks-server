@@ -1,4 +1,4 @@
-import type { SessionTokens } from "./token.js";
+import type { SessionTokens } from "./types.js";
 
 export type ErrorCode =
   | "UserAlreadyExists"
