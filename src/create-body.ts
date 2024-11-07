@@ -4,7 +4,7 @@ import type {
   SuccessBody,
   SuccessCode,
   SuccessCodes,
-} from "./response-bodies.js";
+} from "./response-body.js";
 
 export const createErrorBody = <C extends ErrorCode>(code: C): ErrorBody<C> => {
   return {

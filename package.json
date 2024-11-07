@@ -3,9 +3,7 @@
   "version": "0.0.0",
   "type": "module",
   "exports": {
-    "./response-bodies": {
-      "types": "./src/response-bodies.ts"
-    }
+    "./response-body": "./dist/response-body.js"
   },
   "scripts": {
     "clean": "rimraf ./dist",
