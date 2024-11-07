@@ -11,8 +11,12 @@
     "clean": "rimraf ./dist",
     "dev": "npm run clean && tsc --project ./tsconfig.dev.json --watch --preserveWatchOutput",
     "build": "npm run clean && tsc --project ./tsconfig.build.json",
+    "build:no-emit": "tsc --project ./tsconfig.build.json --noEmit",
     "lint": "eslint",
-    "format": "prettier --list-different --write ."
+    "format": "prettier --list-different --write . !./dist",
+    "format:check": "prettier --list-different . !./dist",
+    "prepare": "husky",
+    "pre-commit": "npm run format:check && npm run build:no-emit && npm run lint"
   },
   "dependencies": {
     "zod": "^3.23.8"
