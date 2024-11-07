@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "type": "module",
   "exports": {
-    "./response-body": "./dist/response-body.js"
+    ".": "./dist/exports.js"
   },
   "scripts": {
     "clean": "rimraf ./dist",
