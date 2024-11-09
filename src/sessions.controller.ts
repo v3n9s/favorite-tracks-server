@@ -80,14 +80,13 @@ sessionsRouter
           );
       },
     }),
+  )
+  .delete(
+    createHandler({
+      requireAuthentication: true,
+      handler: async ({ res, user }) => {
+        await deleteSession({ id: user.session.id });
+        res.status(200).json(createSuccessBody("SessionDeleted", null));
+      },
+    }),
   );
-
-sessionsRouter.route("/:id").delete(
-  createHandler({
-    requireAuthentication: true,
-    handler: async ({ res, user }) => {
-      await deleteSession({ id: user.session.id });
-      res.status(200).json(createSuccessBody("SessionDeleted", null));
-    },
-  }),
-);

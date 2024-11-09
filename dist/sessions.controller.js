@@ -56,8 +56,8 @@ sessionsRouter
             .status(200)
             .send(createSuccessBody("SessionUpdated", await updateSession({ id: sessionId })));
     },
-}));
-sessionsRouter.route("/:id").delete(createHandler({
+}))
+    .delete(createHandler({
     requireAuthentication: true,
     handler: async ({ res, user }) => {
         await deleteSession({ id: user.session.id });

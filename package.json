@@ -14,7 +14,8 @@
     "format": "prettier --list-different --write . !./dist",
     "format:check": "prettier --list-different . !./dist",
     "prepare": "husky",
-    "pre-commit": "npm run format:check && npm run build:no-emit && npm run lint"
+    "pre-commit": "npm run format:check && npm run build:no-emit && npm run lint",
+    "release": "git checkout releases && git merge master --no-commit && npm run build && git add ./dist && git commit -m \"compile project\""
   },
   "dependencies": {
     "zod": "^3.23.8"
