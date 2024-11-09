@@ -2,7 +2,7 @@ import * as jose from "jose";
 import { z } from "zod";
 import { schemas } from "./schemas.js";
 import { verifyAccessToken } from "./token.js";
-import { getUserWithPassword, isUserExists } from "./users.service.js";
+import { getUserWithSession, isUserExists } from "./users.service.js";
 import { isSessionExists } from "./sessions.service.js";
 import { createErrorBody } from "./create-body.js";
 export const createHandler = ({ schema, requireAuthentication = false, handler, }) => {
@@ -48,13 +48,13 @@ export const createHandler = ({ schema, requireAuthentication = false, handler, 
                     res.status(401).json(createErrorBody("SessionUserNotFound"));
                     return;
                 }
-                user = await getUserWithPassword({ id: userId });
+                user = await getUserWithSession({ id: userId, sessionId });
             }
             else {
                 user = {};
             }
             try {
-                const data = await schema.parseAsync(req);
+                const data = await schema?.parseAsync(req);
                 await handler({ req, res, data, user });
             }
             catch (e) {

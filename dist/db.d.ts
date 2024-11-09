@@ -9,6 +9,9 @@ export type PasswordDb = {
     password: string;
 };
 export type UserWithPasswordDb = UserDb & Pick<PasswordDb, "password">;
+export type UserWithSessionDb = UserDb & {
+    session: SessionDb;
+};
 export type SessionDb = {
     id: string;
     userId: string;

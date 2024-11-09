@@ -9,7 +9,6 @@ export type ErrorCode =
   | "TokenExpired"
   | "SessionNotFound"
   | "SessionUserNotFound"
-  | "SessionUserMismatch"
   | "ValidationError"
   | "InternalError"
   | "ContentTypeApplicationJsonRequired"

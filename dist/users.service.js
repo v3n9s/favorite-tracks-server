@@ -1,5 +1,6 @@
 import { getDb, getUniqueId, } from "./db.js";
 import { getHash } from "./hash.js";
+import { getSession } from "./sessions.service.js";
 export class UserNotFoundError extends Error {
 }
 export class UserPasswordNotFoundError extends Error {
@@ -43,6 +44,11 @@ export const getUserWithPassword = async (args) => {
         throw new UserPasswordNotFoundError();
     }
     return { ...user, password: passwordEntry.password };
+};
+export const getUserWithSession = async (args) => {
+    const user = await getUser(args);
+    const session = await getSession({ id: args.sessionId });
+    return { ...user, session };
 };
 export const createUser = async ({ name, publicName, password, }) => {
     if (await isUserExists({ name })) {
