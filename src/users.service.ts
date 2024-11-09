@@ -4,8 +4,10 @@ import {
   type PasswordDb,
   type UserDb,
   type UserWithPasswordDb,
+  type UserWithSessionDb,
 } from "./db.js";
 import { getHash } from "./hash.js";
+import { getSession } from "./sessions.service.js";
 
 type IdOrNameObject =
   | { id: string; name?: never }
@@ -61,6 +63,15 @@ export const getUserWithPassword = async (
   }
 
   return { ...user, password: passwordEntry.password };
+};
+
+export const getUserWithSession = async (
+  args: IdOrNameObject & { sessionId: string },
+): Promise<UserWithSessionDb> => {
+  const user = await getUser(args);
+  const session = await getSession({ id: args.sessionId });
+
+  return { ...user, session };
 };
 
 export const createUser = async ({

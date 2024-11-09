@@ -2,9 +2,9 @@ import type { Request, Response } from "express";
 import * as jose from "jose";
 import { z } from "zod";
 import { schemas } from "./schemas.js";
-import type { UserWithPasswordDb } from "./db.js";
+import type { UserWithSessionDb } from "./db.js";
 import { verifyAccessToken } from "./token.js";
-import { getUserWithPassword, isUserExists } from "./users.service.js";
+import { getUserWithSession, isUserExists } from "./users.service.js";
 import { isSessionExists } from "./sessions.service.js";
 import { createErrorBody } from "./create-body.js";
 
@@ -27,7 +27,7 @@ export type CreateHandlerFn = <
       req: Request;
       res: Response;
       data: z.output<Schema>;
-    } & (RA extends true ? { user: UserWithPasswordDb } : unknown),
+    } & (RA extends true ? { user: UserWithSessionDb } : unknown),
   ) => Promise<void> | void;
 }) => ExpressRequestHandlerNoInfer;
 
@@ -38,7 +38,7 @@ export const createHandler: CreateHandlerFn = ({
 }) => {
   return (req, res) => {
     (async () => {
-      let user: UserWithPasswordDb;
+      let user: UserWithSessionDb;
       if (requireAuthentication) {
         let token: string;
         try {
@@ -82,9 +82,9 @@ export const createHandler: CreateHandlerFn = ({
           return;
         }
 
-        user = await getUserWithPassword({ id: userId });
+        user = await getUserWithSession({ id: userId, sessionId });
       } else {
-        user = {} as UserWithPasswordDb;
+        user = {} as UserWithSessionDb;
       }
 
       try {

@@ -3,7 +3,6 @@ import { createHandler } from "./create-handler.js";
 import {
   createSession,
   deleteSession,
-  getSession,
   isSessionExists,
   updateSession,
 } from "./sessions.service.js";
@@ -85,22 +84,10 @@ sessionsRouter
 
 sessionsRouter.route("/:id").delete(
   createHandler({
-    schema: z.object({
-      params: z.object({
-        id: schemas.id,
-      }),
-    }),
+    schema: z.object({}),
     requireAuthentication: true,
-    handler: async ({ res, data, user }) => {
-      if (!(await isSessionExists({ id: data.params.id }))) {
-        res.status(404).json(createErrorBody("SessionNotFound"));
-        return;
-      }
-      if ((await getSession({ id: data.params.id })).userId !== user.id) {
-        res.status(403).json(createErrorBody("SessionUserMismatch"));
-        return;
-      }
-      await deleteSession({ id: data.params.id });
+    handler: async ({ res, user }) => {
+      await deleteSession({ id: user.session.id });
       res.status(200).json(createSuccessBody("SessionDeleted", null));
     },
   }),
