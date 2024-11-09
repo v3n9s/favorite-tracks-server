@@ -13,7 +13,7 @@ app.use((req, res, next) => {
   res.setHeader("access-control-allow-origin", "*");
   if (req.method === "OPTIONS") {
     res.setHeader("access-control-allow-methods", "*");
-    res.setHeader("access-control-allow-headers", "*");
+    res.setHeader("access-control-allow-headers", "*, authorization");
     res.status(200).json(createSuccessBody("CORSRequestAllowed", null));
     return;
   }
