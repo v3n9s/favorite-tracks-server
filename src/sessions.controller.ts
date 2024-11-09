@@ -84,7 +84,6 @@ sessionsRouter
 
 sessionsRouter.route("/:id").delete(
   createHandler({
-    schema: z.object({}),
     requireAuthentication: true,
     handler: async ({ res, user }) => {
       await deleteSession({ id: user.session.id });

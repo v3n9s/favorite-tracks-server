@@ -20,7 +20,7 @@ export type CreateHandlerFn = <
   Schema extends z.ZodType<unknown>,
   RA extends boolean = false,
 >(arg: {
-  schema: Schema;
+  schema?: Schema;
   requireAuthentication?: RA;
   handler: (
     args: {
@@ -88,7 +88,7 @@ export const createHandler: CreateHandlerFn = ({
       }
 
       try {
-        const data = await schema.parseAsync(req);
+        const data = await schema?.parseAsync(req);
         await handler({ req, res, data, user });
       } catch (e) {
         if (e instanceof z.ZodError) {
